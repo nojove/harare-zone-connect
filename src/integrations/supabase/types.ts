@@ -9,7 +9,417 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      agent_codes: {
+        Row: {
+          agent_id: string
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          agent_id: string
+          code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          agent_id?: string
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_codes_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      banners: {
+        Row: {
+          category_id: string | null
+          content: string
+          created_at: string
+          end_date: string
+          id: string
+          image: string | null
+          is_flagged: boolean
+          placement: string
+          profile_id: string
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+          video: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          content: string
+          created_at?: string
+          end_date: string
+          id?: string
+          image?: string | null
+          is_flagged?: boolean
+          placement: string
+          profile_id: string
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+          video?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          content?: string
+          created_at?: string
+          end_date?: string
+          id?: string
+          image?: string | null
+          is_flagged?: boolean
+          placement?: string
+          profile_id?: string
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          video?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "banners_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "banners_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          color: string
+          created_at: string
+          description: string | null
+          icon_name: string | null
+          id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name: string
+          type: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      classifieds: {
+        Row: {
+          category_id: string | null
+          contact_info: string
+          created_at: string
+          description: string
+          expires_at: string
+          id: string
+          images: string[] | null
+          is_flagged: boolean
+          location: string
+          price: number | null
+          profile_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          contact_info: string
+          created_at?: string
+          description: string
+          expires_at: string
+          id?: string
+          images?: string[] | null
+          is_flagged?: boolean
+          location: string
+          price?: number | null
+          profile_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          contact_info?: string
+          created_at?: string
+          description?: string
+          expires_at?: string
+          id?: string
+          images?: string[] | null
+          is_flagged?: boolean
+          location?: string
+          price?: number | null
+          profile_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classifieds_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "classifieds_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      directory_listings: {
+        Row: {
+          bio: string | null
+          business_name: string | null
+          cell_number: string
+          created_at: string
+          id: string
+          is_visible: boolean
+          location: string
+          name: string
+          profile_id: string
+          service_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          business_name?: string | null
+          cell_number: string
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          location: string
+          name: string
+          profile_id: string
+          service_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          business_name?: string | null
+          cell_number?: string
+          created_at?: string
+          id?: string
+          is_visible?: boolean
+          location?: string
+          name?: string
+          profile_id?: string
+          service_type?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "directory_listings_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          description: string
+          end_date: string | null
+          event_date: string
+          has_rsvp: boolean
+          id: string
+          image: string | null
+          is_flagged: boolean
+          location: string
+          map_location: Json | null
+          profile_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          end_date?: string | null
+          event_date: string
+          has_rsvp?: boolean
+          id?: string
+          image?: string | null
+          is_flagged?: boolean
+          location: string
+          map_location?: Json | null
+          profile_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          event_date?: string
+          has_rsvp?: boolean
+          id?: string
+          image?: string | null
+          is_flagged?: boolean
+          location?: string
+          map_location?: Json | null
+          profile_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          allow_call: boolean
+          allow_email: boolean
+          allow_sms: boolean
+          bio: string | null
+          business_name: string | null
+          cell_number: string
+          created_at: string
+          full_name: string
+          id: string
+          is_visible: boolean
+          location: string
+          role: Database["public"]["Enums"]["user_role"]
+          service_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          allow_call?: boolean
+          allow_email?: boolean
+          allow_sms?: boolean
+          bio?: string | null
+          business_name?: string | null
+          cell_number: string
+          created_at?: string
+          full_name: string
+          id: string
+          is_visible?: boolean
+          location: string
+          role?: Database["public"]["Enums"]["user_role"]
+          service_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allow_call?: boolean
+          allow_email?: boolean
+          allow_sms?: boolean
+          bio?: string | null
+          business_name?: string | null
+          cell_number?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          is_visible?: boolean
+          location?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          service_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          agent_code_id: string | null
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          item_id: string
+          item_type: string
+          payment_method: string
+          payment_reference: string | null
+          profile_id: string
+          status: string
+        }
+        Insert: {
+          agent_code_id?: string | null
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          item_id: string
+          item_type: string
+          payment_method: string
+          payment_reference?: string | null
+          profile_id: string
+          status?: string
+        }
+        Update: {
+          agent_code_id?: string | null
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          payment_method?: string
+          payment_reference?: string | null
+          profile_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_agent_code_id_fkey"
+            columns: ["agent_code_id"]
+            isOneToOne: false
+            referencedRelation: "agent_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +428,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "user" | "agent" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +543,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["user", "agent", "admin"],
+    },
   },
 } as const
