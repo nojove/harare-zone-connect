@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -15,9 +14,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import { useAuth } from '../../contexts/AuthContext';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { toast } from 'sonner';
 
 const registerSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
@@ -80,9 +81,14 @@ const Register = () => {
         allow_email: data.allowEmail,
       });
 
-      if (!error) {
+      if (error) {
+        toast.error(`Registration failed: ${error.message}`);
+      } else {
+        toast.success("Account created successfully!");
         navigate('/');
       }
+    } catch (error: any) {
+      toast.error(`An unexpected error occurred: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -144,6 +150,10 @@ const Register = () => {
                       </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
+                  <FormDescription className="flex items-center text-xs">
+                    <Info className="mr-1 h-3 w-3" />
+                    Please remember your 4-digit PIN for login
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

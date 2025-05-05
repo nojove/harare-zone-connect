@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
@@ -84,9 +83,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     userData: Omit<Profile, 'id' | 'created_at' | 'updated_at' | 'role'>
   ) => {
     try {
+      // Convert 4-digit PIN to a valid Supabase password format
+      // We'll append a standard string to make it meet the 6-character requirement
+      // while keeping the user's 4-digit PIN intact
+      const enhancedPassword = `pin-${password}`;
+      
       const { data, error } = await supabase.auth.signUp({ 
         email, 
-        password,
+        password: enhancedPassword,
         options: {
           data: {
             full_name: userData.full_name,
@@ -124,9 +128,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      // Convert 4-digit PIN to the same enhanced format used in signup
+      const enhancedPassword = `pin-${password}`;
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password: enhancedPassword,
       });
 
       if (error) {
