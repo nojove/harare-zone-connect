@@ -17,11 +17,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useAuth } from '../../contexts/AuthContext';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
 const registerSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string()
+    .length(4, 'Password must be exactly 4 digits')
+    .regex(/^\d{4}$/, 'Password must contain only digits'),
   cellNumber: z.string().min(8, 'Cell number is required'),
   location: z.string().min(2, 'Location is required'),
   businessName: z.string().optional(),
@@ -130,9 +133,16 @@ const Register = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>PIN (4 digits)</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="******" {...field} />
+                    <InputOTP maxLength={4} {...field}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
