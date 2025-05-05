@@ -30,8 +30,8 @@ const registerSchema = z.object({
   allowCall: z.boolean().default(true),
   allowSMS: z.boolean().default(true),
   allowEmail: z.boolean().default(true),
-  termsAccepted: z.literal(true, {
-    errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: 'You must accept the terms and conditions',
   }),
 });
 
