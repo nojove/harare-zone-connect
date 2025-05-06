@@ -2,7 +2,7 @@
 import { FC } from 'react';
 import { cloneElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Tag, Calendar, Bell } from 'lucide-react';
+import { Home, Briefcase, Tag, Calendar, User } from 'lucide-react';
 
 const NavigationTabs: FC = () => {
   const location = useLocation();
@@ -16,11 +16,18 @@ const NavigationTabs: FC = () => {
       textColor: 'text-category-home'
     },
     {
-      name: 'Directory',
-      path: '/directory',
-      icon: <BookOpen size={20} />,
-      color: 'bg-category-directory',
-      textColor: 'text-category-directory'
+      name: 'Personal',
+      path: '/personal',
+      icon: <User size={20} />,
+      color: 'bg-purple-500',
+      textColor: 'text-purple-500'
+    },
+    {
+      name: 'Business',
+      path: '/business',
+      icon: <Briefcase size={20} />,
+      color: 'bg-blue-500',
+      textColor: 'text-blue-500'
     },
     {
       name: 'Classifieds',
@@ -35,13 +42,6 @@ const NavigationTabs: FC = () => {
       icon: <Calendar size={20} />,
       color: 'bg-category-events',
       textColor: 'text-category-events'
-    },
-    {
-      name: 'Ads',
-      path: '/banners',
-      icon: <Bell size={20} />,
-      color: 'bg-category-ads',
-      textColor: 'text-category-ads'
     }
   ];
   
@@ -63,7 +63,7 @@ const NavigationTabs: FC = () => {
                 className={`p-1 rounded-full ${isActive ? `${tab.color} bg-opacity-20` : ''}`}
               >
                 {cloneElement(tab.icon, { 
-                  color: isActive ? tab.color.replace('bg-', '').replace('category-', '#') : undefined 
+                  color: isActive ? tab.color.replace('bg-', '').replace('category-', '#').replace('purple-500', '#8B5CF6').replace('blue-500', '#3B82F6') : undefined 
                 })}
               </div>
               <span className="text-xs mt-1">{tab.name}</span>

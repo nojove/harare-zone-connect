@@ -12,6 +12,11 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import DirectoryList from "./pages/Directory/DirectoryList";
 import DirectoryDetail from "./pages/Directory/DirectoryDetail";
+import PersonalHub from "./pages/Personal/PersonalHub";
+import BusinessHub from "./pages/Business/BusinessHub";
+import BusinessAdInput from "./pages/Business/BusinessAdInput";
+import ClassifiedsHub from "./pages/Classifieds/ClassifiedsHub";
+import EventsHub from "./pages/Events/EventsHub";
 import Protected from "./pages/Protected";
 import NotFound from "./pages/NotFound";
 
@@ -30,6 +35,11 @@ const App = () => (
             <Route path="/auth/register" element={<Register />} />
             <Route path="/directory" element={<Protected><DirectoryList /></Protected>} />
             <Route path="/directory/:id" element={<Protected><DirectoryDetail /></Protected>} />
+            <Route path="/personal" element={<Protected><PersonalHub /></Protected>} />
+            <Route path="/business" element={<Protected><BusinessHub /></Protected>} />
+            <Route path="/business/advertise" element={<Protected><BusinessAdInput /></Protected>} />
+            <Route path="/classifieds" element={<Protected><ClassifiedsHub /></Protected>} />
+            <Route path="/events" element={<Protected><EventsHub /></Protected>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
