@@ -58,7 +58,7 @@ export const RegisterForm: React.FC = () => {
         toast.error(`Registration failed: ${error.message}`);
       } else {
         toast.success("Account created successfully!");
-        navigate('/');
+        navigate('/auth/login');
       }
     } catch (error: any) {
       toast.error(`An unexpected error occurred: ${error.message}`);
