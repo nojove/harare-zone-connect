@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,24 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+                // Category theme colors
+                category: {
+                    'home': '#4C9AFF',
+                    'directory': '#36B37E',
+                    'classifieds': '#FF5630',
+                    'events': '#FFAB00',
+                    'ads': '#6554C0',
+                    // Additional category colors
+                    'restaurants': '#FF8B00',
+                    'shopping': '#00B8D9',
+                    'services': '#6554C0',
+                    'education': '#36B37E',
+                    'health': '#00875A',
+                    'entertainment': '#FF5630',
+                    'transport': '#4C9AFF',
+                    'community': '#FFAB00'
+                }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

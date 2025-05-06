@@ -11,31 +11,36 @@ const NavigationTabs: FC = () => {
       name: 'Home',
       path: '/',
       icon: <Home size={20} />,
-      color: '#4C9AFF'
+      color: 'bg-category-home',
+      textColor: 'text-category-home'
     },
     {
       name: 'Directory',
       path: '/directory',
       icon: <BookOpen size={20} />,
-      color: '#36B37E'
+      color: 'bg-category-directory',
+      textColor: 'text-category-directory'
     },
     {
       name: 'Classifieds',
       path: '/classifieds',
       icon: <Tag size={20} />,
-      color: '#FF5630'
+      color: 'bg-category-classifieds',
+      textColor: 'text-category-classifieds'
     },
     {
       name: 'Events',
       path: '/events',
       icon: <Calendar size={20} />,
-      color: '#FFAB00'
+      color: 'bg-category-events',
+      textColor: 'text-category-events'
     },
     {
       name: 'Ads',
       path: '/banners',
       icon: <Bell size={20} />,
-      color: '#6554C0'
+      color: 'bg-category-ads',
+      textColor: 'text-category-ads'
     }
   ];
   
@@ -50,14 +55,15 @@ const NavigationTabs: FC = () => {
               key={tab.path}
               to={tab.path}
               className={`flex flex-col items-center justify-center px-4 py-2 ${
-                isActive ? 'text-blue-600' : 'text-gray-500'
+                isActive ? tab.textColor : 'text-gray-500'
               }`}
             >
               <div 
-                className={`p-1 rounded-full ${isActive ? 'bg-blue-100' : ''}`}
-                style={{ color: isActive ? tab.color : '' }}
+                className={`p-1 rounded-full ${isActive ? `${tab.color} bg-opacity-20` : ''}`}
               >
-                {tab.icon}
+                {React.cloneElement(tab.icon, { 
+                  color: isActive ? tab.color.replace('bg-', '').replace('category-', '#') : undefined 
+                })}
               </div>
               <span className="text-xs mt-1">{tab.name}</span>
             </Link>
