@@ -1,5 +1,6 @@
 
 import { FC } from 'react';
+import { cloneElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, BookOpen, Tag, Calendar, Bell } from 'lucide-react';
 
@@ -61,7 +62,7 @@ const NavigationTabs: FC = () => {
               <div 
                 className={`p-1 rounded-full ${isActive ? `${tab.color} bg-opacity-20` : ''}`}
               >
-                {React.cloneElement(tab.icon, { 
+                {cloneElement(tab.icon, { 
                   color: isActive ? tab.color.replace('bg-', '').replace('category-', '#') : undefined 
                 })}
               </div>
