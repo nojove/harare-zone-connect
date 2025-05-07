@@ -83,6 +83,10 @@ const Home: FC = () => {
   const navigateToDesigner = (type: string) => {
     navigate(`/design/${type.toLowerCase()}`);
   };
+  
+  const handleEventClick = (eventId: string) => {
+    navigate(`/events/${eventId}`);
+  };
 
   return (
     <MainLayout bottomBanner={bottomBanner}>

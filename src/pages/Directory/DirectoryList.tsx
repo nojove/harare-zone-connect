@@ -1,4 +1,3 @@
-
 import { FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,7 +58,7 @@ const DirectoryList: FC = () => {
   };
 
   return (
-    <MainLayout category="directory">
+    <MainLayout category="default">
       <div className="flex flex-col p-4">
         <h1 className="text-2xl font-bold mb-4">Directory</h1>
         

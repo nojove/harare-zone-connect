@@ -1,4 +1,3 @@
-
 import { FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,7 +63,7 @@ const DirectoryDetail: FC = () => {
   };
 
   return (
-    <MainLayout category="directory">
+    <MainLayout category="default">
       <div className="flex flex-col p-4">
         <Button 
           variant="ghost" 
