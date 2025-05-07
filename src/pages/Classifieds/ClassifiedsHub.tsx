@@ -46,8 +46,8 @@ const ClassifiedsHub: FC = () => {
   };
   
   return (
-    <MainLayout>
-      <div className="flex flex-col p-4" style={{ backgroundColor: '#FFF8F0' }}>
+    <MainLayout category="classifieds">
+      <div className="flex flex-col p-4">
         <h1 className="text-2xl font-bold mb-4">Classifieds</h1>
         
         <div className="mb-6">

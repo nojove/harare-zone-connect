@@ -1,4 +1,3 @@
-
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
@@ -47,8 +46,8 @@ const EventsHub: FC = () => {
   };
   
   return (
-    <MainLayout>
-      <div className="flex flex-col p-4" style={{ backgroundColor: '#FFF8E8' }}>
+    <MainLayout category="events">
+      <div className="flex flex-col p-4">
         <h1 className="text-2xl font-bold mb-4">Events</h1>
         
         <div className="mb-6">

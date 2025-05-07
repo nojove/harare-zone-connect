@@ -20,6 +20,12 @@ import EventsHub from "./pages/Events/EventsHub";
 import Protected from "./pages/Protected";
 import NotFound from "./pages/NotFound";
 
+// Design Pages
+import BusinessDesigner from "./pages/Design/BusinessDesigner";
+import ClassifiedDesigner from "./pages/Design/ClassifiedDesigner";
+import EventDesigner from "./pages/Design/EventDesigner";
+import PersonalDesigner from "./pages/Design/PersonalDesigner";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -40,6 +46,13 @@ const App = () => (
             <Route path="/business/advertise" element={<Protected><BusinessAdInput /></Protected>} />
             <Route path="/classifieds" element={<Protected><ClassifiedsHub /></Protected>} />
             <Route path="/events" element={<Protected><EventsHub /></Protected>} />
+            
+            {/* Design Routes */}
+            <Route path="/design/business" element={<Protected><BusinessDesigner /></Protected>} />
+            <Route path="/design/classifieds" element={<Protected><ClassifiedDesigner /></Protected>} />
+            <Route path="/design/events" element={<Protected><EventDesigner /></Protected>} />
+            <Route path="/design/personal" element={<Protected><PersonalDesigner /></Protected>} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

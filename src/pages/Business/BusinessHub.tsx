@@ -47,7 +47,7 @@ const BusinessHub: FC = () => {
   const filteredListings = dummyListings.filter(listing => listing.category === selectedCategory);
   
   return (
-    <MainLayout>
+    <MainLayout category="business">
       <div className="flex flex-col p-4">
         <h1 className="text-2xl font-bold mb-4">Business Hub</h1>
         

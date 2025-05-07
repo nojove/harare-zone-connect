@@ -64,7 +64,7 @@ const DirectoryDetail: FC = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout category="directory">
       <div className="flex flex-col p-4">
         <Button 
           variant="ghost" 
@@ -104,7 +104,7 @@ const DirectoryDetail: FC = () => {
             </div>
             
             {listing.bio && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <div className="mt-4 p-4 bg-white rounded-lg shadow-sm">
                 <h3 className="font-medium mb-2">About</h3>
                 <p className="text-gray-700">{listing.bio}</p>
               </div>

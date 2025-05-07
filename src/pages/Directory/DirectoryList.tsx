@@ -1,14 +1,13 @@
 
 import { FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { DirectoryListing } from '../../types';
-import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import MainLayout from '../../components/MainLayout';
 import { useCategories } from '../../hooks/useCategories';
 import CategoryTabs from '../../components/CategoryTabs';
+import SearchBar from '@/components/SearchBar';
 
 const DirectoryList: FC = () => {
   const navigate = useNavigate();
@@ -55,8 +54,12 @@ const DirectoryList: FC = () => {
     navigate(`/directory/${id}`);
   };
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   return (
-    <MainLayout>
+    <MainLayout category="directory">
       <div className="flex flex-col p-4">
         <h1 className="text-2xl font-bold mb-4">Directory</h1>
         
@@ -66,15 +69,8 @@ const DirectoryList: FC = () => {
           <CategoryTabs categories={categories} />
         )}
         
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Search directory..."
-            className="pl-10"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="mb-4">
+          <SearchBar onSearch={handleSearch} placeholder="Search directory..." />
         </div>
         
         {loading ? (

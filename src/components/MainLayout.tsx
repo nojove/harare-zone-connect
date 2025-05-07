@@ -7,6 +7,7 @@ import NavigationTabs from './NavigationTabs';
 import TopNavigation from './TopNavigation';
 import { Banner } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import { CategoryThemeProvider } from './CategoryThemeProvider';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface MainLayoutProps {
   showCategories?: boolean;
   categoryType?: string;
   showTopNavigation?: boolean;
+  category?: 'personal' | 'business' | 'classifieds' | 'events' | 'default';
 }
 
 const MainLayout: FC<MainLayoutProps> = ({ 
@@ -21,24 +23,27 @@ const MainLayout: FC<MainLayoutProps> = ({
   bottomBanner,
   showCategories = false,
   categoryType,
-  showTopNavigation = true
+  showTopNavigation = true,
+  category = 'default'
 }) => {
   const { session } = useAuth();
   const navigate = useNavigate();
   
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <AppHeader />
-      
-      {showTopNavigation && <TopNavigation />}
-      
-      <div className="flex-grow pb-8">
-        {children}
+    <CategoryThemeProvider category={category}>
+      <div className="flex flex-col min-h-screen">
+        <AppHeader />
+        
+        {showTopNavigation && <TopNavigation />}
+        
+        <div className="flex-grow pb-8">
+          {children}
+        </div>
+        
+        <NavigationTabs />
+        <BottomBanner banner={bottomBanner} />
       </div>
-      
-      <NavigationTabs />
-      <BottomBanner banner={bottomBanner} />
-    </div>
+    </CategoryThemeProvider>
   );
 };
 

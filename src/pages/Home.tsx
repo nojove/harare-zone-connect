@@ -6,8 +6,9 @@ import { Category, Banner, Event } from '../types';
 import MainLayout from '../components/MainLayout';
 import CategoryTabs from '../components/CategoryTabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, Tag, Users } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Calendar, Tag, Users, Plus } from 'lucide-react';
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -79,16 +80,8 @@ const Home: FC = () => {
     fetchHomeData();
   }, []);
 
-  const handleCategoryClick = (category: Category) => {
-    if (category.type === 'classified') {
-      navigate(`/classifieds/${category.name.toLowerCase()}`);
-    } else if (category.type === 'event') {
-      navigate(`/events/${category.name.toLowerCase()}`);
-    }
-  };
-
-  const handleEventClick = (id: string) => {
-    navigate(`/events/${id}`);
+  const navigateToDesigner = (type: string) => {
+    navigate(`/design/${type.toLowerCase()}`);
   };
 
   return (
@@ -114,6 +107,80 @@ const Home: FC = () => {
               </div>
             </div>
             
+            {/* Create New Content Section */}
+            <section className="mb-6">
+              <h2 className="text-lg font-semibold mb-3">Create New</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <Card
+                  className="cursor-pointer hover:shadow-md transition-shadow bg-category-personal-soft"
+                  onClick={() => navigateToDesigner('personal')}
+                >
+                  <CardContent className="p-3 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-category-personal">
+                        <Plus className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-sm">Personal Post</h3>
+                        <p className="text-xs text-gray-500">Share updates</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="cursor-pointer hover:shadow-md transition-shadow bg-category-business-soft"
+                  onClick={() => navigateToDesigner('business')}
+                >
+                  <CardContent className="p-3 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-category-business">
+                        <Plus className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-sm">Business Listing</h3>
+                        <p className="text-xs text-gray-500">Promote business</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="cursor-pointer hover:shadow-md transition-shadow bg-category-classifieds-soft"
+                  onClick={() => navigateToDesigner('classifieds')}
+                >
+                  <CardContent className="p-3 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-category-classifieds">
+                        <Plus className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-sm">Classified Ad</h3>
+                        <p className="text-xs text-gray-500">Sell or buy</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="cursor-pointer hover:shadow-md transition-shadow bg-category-events-soft"
+                  onClick={() => navigateToDesigner('events')}
+                >
+                  <CardContent className="p-3 flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 bg-category-events">
+                        <Plus className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-sm">Event</h3>
+                        <p className="text-xs text-gray-500">Create event</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
+            
             {/* Categories */}
             <section className="mb-6">
               <h2 className="text-lg font-semibold mb-3">Categories</h2>
@@ -123,8 +190,14 @@ const Home: FC = () => {
                   .map((category) => (
                     <Card 
                       key={category.id}
-                      className="cursor-pointer hover:shadow-md transition-shadow"
-                      onClick={() => handleCategoryClick(category)}
+                      className="cursor-pointer hover:shadow-md transition-shadow bg-white"
+                      onClick={() => {
+                        if (category.type === 'classified') {
+                          navigate(`/classifieds/${category.name.toLowerCase()}`);
+                        } else if (category.type === 'event') {
+                          navigate(`/events/${category.name.toLowerCase()}`);
+                        }
+                      }}
                     >
                       <CardContent className="p-3 flex items-center">
                         <div 
