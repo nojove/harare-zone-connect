@@ -6,10 +6,41 @@ const TopNavigation: FC = () => {
   const location = useLocation();
   
   const navItems = [
-    { name: 'Personal Hub', path: '/personal' },
-    { name: 'Business Hub', path: '/business' },
-    { name: 'Classifieds', path: '/classifieds' },
-    { name: 'Events', path: '/events' },
+    { 
+      name: 'Personal Hub', 
+      path: '/personal', 
+      color: 'bg-category-personal',
+      hoverColor: 'hover:bg-orange-100',
+      activeColor: 'bg-orange-100'
+    },
+    { 
+      name: 'Business Hub', 
+      path: '/business',
+      color: 'bg-category-business',
+      hoverColor: 'hover:bg-indigo-100',
+      activeColor: 'bg-indigo-100'
+    },
+    { 
+      name: 'Classifieds', 
+      path: '/classifieds',
+      color: 'bg-category-classifieds', 
+      hoverColor: 'hover:bg-green-100',
+      activeColor: 'bg-green-100'
+    },
+    { 
+      name: 'Events', 
+      path: '/events',
+      color: 'bg-category-events',
+      hoverColor: 'hover:bg-red-100',
+      activeColor: 'bg-red-100'
+    },
+    { 
+      name: 'Directory', 
+      path: '/directory',
+      color: 'bg-category-directory',
+      hoverColor: 'hover:bg-yellow-100',
+      activeColor: 'bg-yellow-100'
+    },
   ];
   
   return (
@@ -23,8 +54,8 @@ const TopNavigation: FC = () => {
               to={item.path}
               className={`whitespace-nowrap px-3 py-1 rounded-md text-sm font-medium ${
                 isActive 
-                  ? 'bg-gray-100 text-gray-900' 
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? item.activeColor + ' text-gray-900' 
+                  : 'text-gray-600 ' + item.hoverColor + ' hover:text-gray-900'
               }`}
             >
               {item.name}

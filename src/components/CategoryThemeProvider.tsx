@@ -1,7 +1,7 @@
 
 import { FC, ReactNode, createContext, useContext } from 'react';
 
-type CategoryType = 'personal' | 'business' | 'classifieds' | 'events' | 'default';
+type CategoryType = 'personal' | 'business' | 'classifieds' | 'events' | 'directory' | 'default' | 'home' | 'banners';
 
 interface CategoryThemeContextProps {
   category: CategoryType;
@@ -28,27 +28,50 @@ export const CategoryThemeProvider: FC<CategoryThemeProviderProps> = ({
       case 'personal':
         return { 
           backgroundColor: '#FFF8F0',
-          gradientClass: 'bg-gradient-to-br from-[#FFF8F0] to-[#FFECD9]'
+          gradientClass: 'bg-gradient-to-br from-[#FFF8F0] to-[#FFECD9]',
+          themeColor: '#FF8B00'
         };
       case 'business':
         return { 
           backgroundColor: '#F0F4FF',
-          gradientClass: 'bg-gradient-to-br from-[#F0F4FF] to-[#DCE4FF]'
+          gradientClass: 'bg-gradient-to-br from-[#F0F4FF] to-[#DCE4FF]',
+          themeColor: '#6554C0'
         };
       case 'classifieds':
         return { 
           backgroundColor: '#FFF8E8',
-          gradientClass: 'bg-gradient-to-br from-[#FFF8E8] to-[#FFF0C9]'
+          gradientClass: 'bg-gradient-to-br from-[#FFF8E8] to-[#FFF0C9]',
+          themeColor: '#32CD32'
         };
       case 'events':
         return { 
           backgroundColor: '#F8FFF0',
-          gradientClass: 'bg-gradient-to-br from-[#F8FFF0] to-[#ECFFD9]'
+          gradientClass: 'bg-gradient-to-br from-[#F8FFF0] to-[#ECFFD9]',
+          themeColor: '#FF6347'
+        };
+      case 'directory':
+        return { 
+          backgroundColor: '#FFFDF0',
+          gradientClass: 'bg-gradient-to-br from-[#FFFDF0] to-[#FFF8D9]',
+          themeColor: '#FFD700'
+        };
+      case 'banners':
+        return { 
+          backgroundColor: '#F8F0FF',
+          gradientClass: 'bg-gradient-to-br from-[#F8F0FF] to-[#F0E4FF]',
+          themeColor: '#9370DB'
+        };
+      case 'home':
+        return { 
+          backgroundColor: '#F0F8FF',
+          gradientClass: 'bg-gradient-to-br from-[#F0F8FF] to-[#E4F1FF]',
+          themeColor: '#1E90FF'
         };
       default:
         return { 
           backgroundColor: '#F9FAFB',
-          gradientClass: 'bg-gray-50'
+          gradientClass: 'bg-gray-50',
+          themeColor: '#4C9AFF'
         };
     }
   };

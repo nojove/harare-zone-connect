@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -64,13 +65,14 @@ export default {
 				},
                 // Category theme colors
                 category: {
-                    // Base theme colors
-                    'home': '#4C9AFF',
-                    'directory': '#36B37E',
-                    'classifieds': '#FF5630',
-                    'events': '#FFAB00',
+                    // Base theme colors with the new requested values
+                    'home': '#1E90FF',
+                    'directory': '#FFD700',
+                    'classifieds': '#32CD32',
+                    'events': '#FF6347',
                     'business': '#6554C0',
                     'personal': '#FF8B00',
+                    'banners': '#9370DB',
                     
                     // Pastel theme colors
                     'personal-soft': '#FFF8F0',

@@ -2,7 +2,7 @@
 import { FC } from 'react';
 import { cloneElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Briefcase, Tag, Calendar, User } from 'lucide-react';
+import { Home, Briefcase, Tag, Calendar, User, FileText, UserCircle } from 'lucide-react';
 
 const NavigationTabs: FC = () => {
   const location = useLocation();
@@ -19,15 +19,15 @@ const NavigationTabs: FC = () => {
       name: 'Personal',
       path: '/personal',
       icon: <User size={20} />,
-      color: 'bg-purple-500',
-      textColor: 'text-purple-500'
+      color: 'bg-category-personal',
+      textColor: 'text-category-personal'
     },
     {
       name: 'Business',
       path: '/business',
       icon: <Briefcase size={20} />,
-      color: 'bg-blue-500',
-      textColor: 'text-blue-500'
+      color: 'bg-category-business',
+      textColor: 'text-category-business'
     },
     {
       name: 'Classifieds',
@@ -42,12 +42,26 @@ const NavigationTabs: FC = () => {
       icon: <Calendar size={20} />,
       color: 'bg-category-events',
       textColor: 'text-category-events'
+    },
+    {
+      name: 'Directory',
+      path: '/directory',
+      icon: <FileText size={20} />,
+      color: 'bg-category-directory',
+      textColor: 'text-category-directory'
+    },
+    {
+      name: 'Profile',
+      path: '/profile',
+      icon: <UserCircle size={20} />,
+      color: 'bg-gray-500',
+      textColor: 'text-gray-800'
     }
   ];
   
   return (
     <div className="fixed bottom-8 left-0 right-0 flex justify-center">
-      <nav className="flex bg-white rounded-full shadow-lg px-2">
+      <nav className="flex bg-white rounded-full shadow-lg px-2 overflow-x-auto">
         {tabs.map((tab) => {
           const isActive = location.pathname === tab.path || 
                          (tab.path !== '/' && location.pathname.startsWith(tab.path));
@@ -55,7 +69,7 @@ const NavigationTabs: FC = () => {
             <Link
               key={tab.path}
               to={tab.path}
-              className={`flex flex-col items-center justify-center px-4 py-2 ${
+              className={`flex flex-col items-center justify-center px-3 py-2 ${
                 isActive ? tab.textColor : 'text-gray-500'
               }`}
             >
@@ -63,7 +77,7 @@ const NavigationTabs: FC = () => {
                 className={`p-1 rounded-full ${isActive ? `${tab.color} bg-opacity-20` : ''}`}
               >
                 {cloneElement(tab.icon, { 
-                  color: isActive ? tab.color.replace('bg-', '').replace('category-', '#').replace('purple-500', '#8B5CF6').replace('blue-500', '#3B82F6') : undefined 
+                  color: isActive ? tab.color.replace('bg-', '').replace('category-', '#').replace('home', '#1E90FF').replace('events', '#FF6347').replace('classifieds', '#32CD32').replace('directory', '#FFD700').replace('personal', '#FF8B00').replace('business', '#6554C0') : undefined 
                 })}
               </div>
               <span className="text-xs mt-1">{tab.name}</span>
