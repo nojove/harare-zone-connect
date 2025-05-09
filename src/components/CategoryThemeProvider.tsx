@@ -1,4 +1,3 @@
-
 import { FC, ReactNode, createContext, useContext } from 'react';
 
 type CategoryType = 'personal' | 'business' | 'classifieds' | 'events' | 'directory' | 'default' | 'home' | 'banners';
@@ -75,7 +74,7 @@ export const CategoryThemeProvider: FC<CategoryThemeProviderProps> = ({
         };
     }
   };
-
+  
   const themeStyles = getThemeStyles();
   
   return (
