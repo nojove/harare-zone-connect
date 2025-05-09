@@ -15,7 +15,7 @@ interface MainLayoutProps {
   showCategories?: boolean;
   categoryType?: string;
   showTopNavigation?: boolean;
-  category?: 'personal' | 'business' | 'classifieds' | 'events' | 'default';
+  category?: 'personal' | 'business' | 'classifieds' | 'events' | 'default' | 'banners';
 }
 
 const MainLayout: FC<MainLayoutProps> = ({ 

@@ -1,4 +1,3 @@
-
 import { FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
@@ -75,7 +74,7 @@ const DetailsPage: FC = () => {
     fetchData();
   }, [id]);
   
-  const getCategoryTheme = (itemType: ItemData['type']) => {
+  const getCategoryTheme = (itemType: ItemData['type']): 'events' | 'classifieds' | 'business' | 'personal' | 'banners' | 'default' => {
     switch (itemType) {
       case 'event': return 'events';
       case 'classified': return 'classifieds';
