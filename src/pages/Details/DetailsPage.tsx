@@ -124,7 +124,7 @@ const DetailsPage: FC = () => {
     fetchData();
   }, [id]);
   
-  const getCategoryTheme = (itemType: ItemData['type']): 'events' | 'classifieds' | 'business' | 'personal' | 'default' | 'banners' => {
+  const getCategoryTheme = (itemType: ItemData['type']): 'default' | 'classifieds' | 'events' | 'personal' | 'business' | 'banners' => {
     switch (itemType) {
       case 'event': return 'events';
       case 'classified': return 'classifieds';
