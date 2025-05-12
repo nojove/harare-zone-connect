@@ -115,3 +115,22 @@ export interface Transaction {
   payment_reference?: string;
   created_at: string;
 }
+
+// Sample data types
+export interface SampleClassified {
+  id: string;
+  title: string;
+  description: string;
+  price: number | null;
+  location: string;
+  images: string[];
+}
+
+export interface SampleEvent {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  event_date: string;
+  image: string;
+}
