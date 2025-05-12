@@ -1,4 +1,3 @@
-
 import { FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
@@ -66,7 +65,7 @@ const DetailsPage: FC = () => {
               description: id === 'sample-1' 
                 ? 'Well-maintained Toyota Hilux 2018 model. Single owner, full service history available. 80,000 km on the clock. 2.8L diesel engine, 4x4 capability, automatic transmission. Features include air conditioning, power steering, electric windows, and central locking. Minor scratches on rear bumper, otherwise in excellent condition. Price negotiable for serious buyers.'
                 : id === 'sample-2'
-                ? 'Spacious 3-bedroom house available for rent in quiet Borrowdale neighborhood. Master bedroom en-suite, family bathroom, open-plan kitchen and living area. Secure walled yard with electric gate, borehole, and small garden. 2-car garage, servant's quarters. Walking distance to shopping center and schools. Available immediately, minimum 12-month lease.'
+                ? 'Spacious 3-bedroom house available for rent in quiet Borrowdale neighborhood. Master bedroom en-suite, family bathroom, open-plan kitchen and living area. Secure walled yard with electric gate, borehole, and small garden. 2-car garage, servant\'s quarters. Walking distance to shopping center and schools. Available immediately, minimum 12-month lease.'
                 : 'Professional catering services available for all events and occasions. We specialize in both traditional and international cuisine, with options for vegetarian and dietary restrictions. Our services include food preparation, delivery, setup, and service staff if required. We cater for weddings, corporate events, birthdays, and family gatherings. Contact us for a free quote and menu consultation.',
               image: id === 'sample-1' 
                 ? 'https://source.unsplash.com/random/800x600/?truck' 

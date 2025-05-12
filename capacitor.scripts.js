@@ -28,7 +28,21 @@ const buildAndSync = () => {
   return false;
 };
 
+// Build APK for Android
+const buildApk = () => {
+  console.log('🤖 Building Android APK...');
+  if (buildAndSync()) {
+    console.log('🚀 Opening Android Studio...');
+    if (runCommand('npx cap open android')) {
+      console.log('✅ Android Studio opened. Build APK using Build > Build Bundle(s) / APK(s) > Build APK(s)');
+      return true;
+    }
+  }
+  return false;
+};
+
 // Export functions
 module.exports = {
-  buildAndSync
+  buildAndSync,
+  buildApk
 };
