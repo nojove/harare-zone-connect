@@ -2,7 +2,6 @@
 import { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from './AppHeader';
-import BottomBanner from './BottomBanner';
 import NavigationTabs from './NavigationTabs';
 import TopNavigation from './TopNavigation';
 import { Banner } from '../types';
@@ -32,16 +31,17 @@ const MainLayout: FC<MainLayoutProps> = ({
   return (
     <CategoryThemeProvider category={category}>
       <div className="flex flex-col min-h-screen">
-        <AppHeader />
+        <div className="fixed top-0 left-0 right-0 z-10">
+          <AppHeader />
+          
+          {showTopNavigation && <TopNavigation />}
+        </div>
         
-        {showTopNavigation && <TopNavigation />}
-        
-        <div className="flex-grow pb-8">
+        <div className="flex-grow pb-20 mt-28">
           {children}
         </div>
         
         <NavigationTabs />
-        <BottomBanner banner={bottomBanner} />
       </div>
     </CategoryThemeProvider>
   );

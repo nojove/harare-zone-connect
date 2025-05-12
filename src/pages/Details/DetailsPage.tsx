@@ -1,3 +1,4 @@
+
 import { FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
@@ -5,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Share2, Flag, Phone, MessageSquare, ArrowLeft } from 'lucide-react';
+import { toast } from '@/components/ui/sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ItemData {
   id: string;
@@ -22,6 +25,7 @@ interface ItemData {
 const DetailsPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [item, setItem] = useState<ItemData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +36,59 @@ const DetailsPage: FC = () => {
       setLoading(true);
       
       try {
-        // For demo purposes, create dummy data based on ID
-        // In a real app, this would be a fetch from your API/Supabase
-        setTimeout(() => {
-          // Check if ID exists (for demo purposes, assume IDs 1-10 exist)
+        // Check if ID is a sample ID (for demo purposes)
+        if (id?.startsWith('sample-')) {
+          // Generate sample data based on ID
+          if (id.startsWith('sample-e')) {
+            // Sample event
+            const sampleEvent = {
+              id,
+              title: id === 'sample-e1' ? 'Harare International Festival' : 'Business Networking Mixer',
+              description: id === 'sample-e1' 
+                ? 'Join us for the annual Harare International Festival of Arts featuring local and international musicians, dancers, and artists. This family-friendly event includes workshops, performances, and food stalls representing diverse cultures. Don\'t miss this celebration of creativity and cultural exchange!'
+                : 'Connect with professionals across industries in this structured networking event. Perfect for entrepreneurs, job-seekers, and business owners looking to expand their professional network. Features speed networking sessions, business card exchange, and a panel discussion with industry leaders.',
+              image: id === 'sample-e1' 
+                ? 'https://source.unsplash.com/random/800x600/?festival' 
+                : 'https://source.unsplash.com/random/800x600/?networking',
+              category: 'Events',
+              createdAt: new Date().toISOString(),
+              contactInfo: '+263 77 123 4567',
+              location: id === 'sample-e1' ? 'Harare Gardens' : 'Meikles Hotel',
+              type: 'event'
+            };
+            setItem(sampleEvent);
+          } else {
+            // Sample classified
+            const sampleClassified = {
+              id,
+              title: id === 'sample-1' ? 'Toyota Hilux 2018 for Sale' : 
+                     id === 'sample-2' ? '3-Bedroom House for Rent' : 'Professional Catering Services',
+              description: id === 'sample-1' 
+                ? 'Well-maintained Toyota Hilux 2018 model. Single owner, full service history available. 80,000 km on the clock. 2.8L diesel engine, 4x4 capability, automatic transmission. Features include air conditioning, power steering, electric windows, and central locking. Minor scratches on rear bumper, otherwise in excellent condition. Price negotiable for serious buyers.'
+                : id === 'sample-2'
+                ? 'Spacious 3-bedroom house available for rent in quiet Borrowdale neighborhood. Master bedroom en-suite, family bathroom, open-plan kitchen and living area. Secure walled yard with electric gate, borehole, and small garden. 2-car garage, servant's quarters. Walking distance to shopping center and schools. Available immediately, minimum 12-month lease.'
+                : 'Professional catering services available for all events and occasions. We specialize in both traditional and international cuisine, with options for vegetarian and dietary restrictions. Our services include food preparation, delivery, setup, and service staff if required. We cater for weddings, corporate events, birthdays, and family gatherings. Contact us for a free quote and menu consultation.',
+              image: id === 'sample-1' 
+                ? 'https://source.unsplash.com/random/800x600/?truck' 
+                : id === 'sample-2'
+                ? 'https://source.unsplash.com/random/800x600/?house'
+                : 'https://source.unsplash.com/random/800x600/?catering',
+              category: 'Classifieds',
+              createdAt: new Date().toISOString(),
+              contactInfo: '+263 77 123 4567',
+              price: id === 'sample-1' ? 12500 : id === 'sample-2' ? 800 : undefined,
+              location: id === 'sample-1' ? 'Harare Central' : id === 'sample-2' ? 'Borrowdale' : 'All Harare',
+              type: 'classified'
+            };
+            setItem(sampleClassified);
+          }
+        } else {
+          // For demo purposes with regular IDs, create dummy data
           const idNumber = parseInt(id || '0');
           
           if (idNumber >= 1 && idNumber <= 10) {
             // Generate dummy data based on ID
-            const dummyTypes = ['event', 'classified', 'business', 'personal', 'banner'];
+            const dummyTypes = ['event', 'classified', 'business', 'banner'];
             const type = dummyTypes[idNumber % dummyTypes.length] as ItemData['type'];
             
             const dummyData: ItemData = {
@@ -60,7 +108,9 @@ const DetailsPage: FC = () => {
           } else {
             setError('Item not found');
           }
-          
+        }
+        
+        setTimeout(() => {
           setLoading(false);
         }, 800); // Simulate loading delay
         
@@ -74,7 +124,7 @@ const DetailsPage: FC = () => {
     fetchData();
   }, [id]);
   
-  const getCategoryTheme = (itemType: ItemData['type']): 'events' | 'classifieds' | 'business' | 'personal' | 'banners' | 'default' => {
+  const getCategoryTheme = (itemType: ItemData['type']): 'events' | 'classifieds' | 'business' | 'personal' | 'default' | 'banners' => {
     switch (itemType) {
       case 'event': return 'events';
       case 'classified': return 'classifieds';
@@ -94,6 +144,26 @@ const DetailsPage: FC = () => {
       case 'banner': return 'bg-category-banners hover:bg-opacity-90';
       default: return '';
     }
+  };
+
+  const handleReportItem = () => {
+    toast("Post has been reported for review", {
+      description: "Our team will review this content shortly"
+    });
+  };
+
+  const handleContactAction = () => {
+    if (!session) {
+      toast("You need to sign in to contact the seller", {
+        description: "Register or sign in for full access"
+      });
+      navigate('/auth/login');
+      return;
+    }
+    
+    toast("Contact request sent", {
+      description: "The poster has been notified of your interest"
+    });
   };
   
   if (loading) {
@@ -203,11 +273,31 @@ const DetailsPage: FC = () => {
             <p className="text-gray-700">{item.contactInfo}</p>
             
             <div className="flex flex-wrap gap-2 mt-4">
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  if (!session) {
+                    toast("You need to sign in to make calls");
+                    navigate('/auth/login');
+                    return;
+                  }
+                  toast("Calling...");
+                }}
+              >
                 <Phone className="h-4 w-4 mr-2" />
                 Call
               </Button>
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  if (!session) {
+                    toast("You need to sign in to send messages");
+                    navigate('/auth/login');
+                    return;
+                  }
+                  toast("Message sent");
+                }}
+              >
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Message
               </Button>
@@ -216,12 +306,25 @@ const DetailsPage: FC = () => {
         )}
         
         <div className="flex justify-between mt-6">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              toast("Item shared to clipboard", {
+                description: "Link has been copied to your clipboard"
+              });
+            }}
+          >
             <Share2 className="h-4 w-4 mr-1" />
             Share
           </Button>
           
-          <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-red-500 hover:text-red-600"
+            onClick={handleReportItem}
+          >
             <Flag className="h-4 w-4 mr-1" />
             Report
           </Button>
@@ -230,7 +333,10 @@ const DetailsPage: FC = () => {
         {/* Call to action button based on item type */}
         {item.type === 'event' && (
           <div className="mt-6">
-            <Button className={`w-full ${getButtonColor(item.type)}`}>
+            <Button 
+              className={`w-full ${getButtonColor(item.type)}`}
+              onClick={handleContactAction}
+            >
               RSVP to Event
             </Button>
           </div>
@@ -238,7 +344,10 @@ const DetailsPage: FC = () => {
         
         {item.type === 'classified' && (
           <div className="mt-6">
-            <Button className={`w-full ${getButtonColor(item.type)}`}>
+            <Button 
+              className={`w-full ${getButtonColor(item.type)}`}
+              onClick={handleContactAction}
+            >
               Contact Seller
             </Button>
           </div>
@@ -246,7 +355,10 @@ const DetailsPage: FC = () => {
         
         {item.type === 'business' && (
           <div className="mt-6">
-            <Button className={`w-full ${getButtonColor(item.type)}`}>
+            <Button 
+              className={`w-full ${getButtonColor(item.type)}`}
+              onClick={handleContactAction}
+            >
               Visit Business
             </Button>
           </div>
