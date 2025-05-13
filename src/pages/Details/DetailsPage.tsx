@@ -1,3 +1,4 @@
+
 import { FC, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
@@ -40,7 +41,7 @@ const DetailsPage: FC = () => {
           // Generate sample data based on ID
           if (id.startsWith('sample-e')) {
             // Sample event
-            const sampleEvent = {
+            const sampleEvent: ItemData = {
               id,
               title: id === 'sample-e1' ? 'Harare International Festival' : 'Business Networking Mixer',
               description: id === 'sample-e1' 
@@ -58,7 +59,7 @@ const DetailsPage: FC = () => {
             setItem(sampleEvent);
           } else {
             // Sample classified
-            const sampleClassified = {
+            const sampleClassified: ItemData = {
               id,
               title: id === 'sample-1' ? 'Toyota Hilux 2018 for Sale' : 
                      id === 'sample-2' ? '3-Bedroom House for Rent' : 'Professional Catering Services',
@@ -87,8 +88,8 @@ const DetailsPage: FC = () => {
           
           if (idNumber >= 1 && idNumber <= 10) {
             // Generate dummy data based on ID
-            const dummyTypes = ['event', 'classified', 'business', 'banner'];
-            const type = dummyTypes[idNumber % dummyTypes.length] as ItemData['type'];
+            const dummyTypes: ItemData['type'][] = ['event', 'classified', 'business', 'banner', 'personal'];
+            const type = dummyTypes[idNumber % dummyTypes.length];
             
             const dummyData: ItemData = {
               id: id || '',
