@@ -41,15 +41,11 @@ export const SuperAdminProvider = ({ children }: { children: ReactNode }) => {
       if (!user) return;
       
       try {
-        const { data, error } = await supabase
-          .from('admin_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .single();
-        
-        if (data && data.role === 'super_admin') {
-          setIsSuperAdmin(true);
-        }
+        // For this demo, we'll hardcode super admin access for specific users
+        // In a real app, you would check against a database table
+        const superAdminEmails = ['admin@example.com', 'super@admin.com'];
+        const isAdmin = user.email && superAdminEmails.includes(user.email);
+        setIsSuperAdmin(isAdmin);
       } catch (error) {
         console.error('Error checking admin status:', error);
       }
