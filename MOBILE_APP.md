@@ -13,9 +13,11 @@ To build the APK, you need:
 
 - Node.js and npm installed
 - Java Development Kit (JDK) 11 or newer
-- Android SDK and build tools
+- Android SDK and build tools (via Android Studio)*
 - Git installed
 - Basic command line knowledge
+
+*Note: If your computer cannot run Android Studio, see the "Alternative Build Methods" section below.
 
 ## Building the APK
 
@@ -81,6 +83,37 @@ To build the APK, you need:
    android/app/build/outputs/apk/debug/app-debug.apk
    ```
 
+## Alternative Build Methods (For Computers Without Android Studio)
+
+If your computer cannot run Android Studio due to hardware limitations, consider these alternatives:
+
+### Option 1: Use a cloud-based build service
+1. Push your code to a GitHub repository
+2. Sign up for a free account on services like:
+   - [AppCircle](https://appcircle.io/)
+   - [Codemagic](https://codemagic.io/)
+   - [Bitrise](https://www.bitrise.io/)
+3. Connect your GitHub repo to the service
+4. Configure the build to generate an Android APK
+5. Download the resulting APK
+
+### Option 2: Use a friend's computer
+1. Copy this project to a USB drive
+2. On a computer with Android Studio installed, run the build script
+3. Copy the resulting APK back to your USB drive
+
+### Option 3: Use a virtual machine or cloud development environment
+1. Sign up for a service like [GitPod](https://www.gitpod.io/) or [GitHub Codespaces](https://github.com/features/codespaces)
+2. Set up a development environment with Android SDK
+3. Build the APK in the cloud
+4. Download the resulting APK
+
+### Option 4: Pre-built APK (Best for non-technical users)
+If you received a pre-built APK from a developer, simply:
+1. Copy the APK file to your Android device
+2. Enable "Install from Unknown Sources" in your device settings
+3. Tap the APK file to install it
+
 ## Testing the APK
 
 You can install the APK on your Android device by:
@@ -126,11 +159,9 @@ If you need to update the app structure or functionality:
 2. Rebuild the APK following the steps above
 3. Distribute the new APK to users
 
-## Troubleshooting
+## Need Help?
 
-If you encounter issues during the build process:
-
-1. Make sure all prerequisites are installed correctly
-2. Check that your website is accessible and works correctly in mobile browsers
-3. Ensure your capacitor.config.ts has the correct website URL
-4. If building on Windows, make sure you have the correct environment variables set for Android development
+If you're having trouble building the APK due to hardware limitations, consider:
+1. Reaching out to a local tech community or freelancer who might have access to better hardware
+2. Using a service like [Fiverr](https://www.fiverr.com/) to hire someone to build the APK for you
+3. Looking into cloud-based Android development environments which can run on any computer with a web browser
