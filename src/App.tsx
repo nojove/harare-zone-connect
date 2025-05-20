@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
+import { SuperAdminProvider } from './contexts/SuperAdminContext';
 
 // Pages
 import Home from "./pages/Home";
@@ -21,6 +22,7 @@ import Protected from "./pages/Protected";
 import NotFound from "./pages/NotFound";
 import DetailsPage from "./pages/Details/DetailsPage";
 import UserProfile from "./pages/Profile/UserProfile";
+import SuperAdminDashboard from "./pages/Admin/SuperAdminDashboard";
 
 // Design Pages
 import BusinessDesigner from "./pages/Design/BusinessDesigner";
@@ -35,34 +37,37 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Protected><Home /></Protected>} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/auth/register" element={<Register />} />
-            <Route path="/directory" element={<Protected><DirectoryList /></Protected>} />
-            <Route path="/directory/:id" element={<Protected><DirectoryDetail /></Protected>} />
-            <Route path="/personal" element={<Protected><PersonalHub /></Protected>} />
-            <Route path="/business" element={<Protected><BusinessHub /></Protected>} />
-            <Route path="/business/advertise" element={<Protected><BusinessAdInput /></Protected>} />
-            <Route path="/classifieds" element={<Protected><ClassifiedsHub /></Protected>} />
-            <Route path="/events" element={<Protected><EventsHub /></Protected>} />
-            <Route path="/details/:id" element={<Protected><DetailsPage /></Protected>} />
-            <Route path="/profile" element={<Protected><UserProfile /></Protected>} />
-            
-            {/* Design Routes */}
-            <Route path="/design/business" element={<Protected><BusinessDesigner /></Protected>} />
-            <Route path="/design/classifieds" element={<Protected><ClassifiedDesigner /></Protected>} />
-            <Route path="/design/events" element={<Protected><EventDesigner /></Protected>} />
-            <Route path="/design/personal" element={<Protected><PersonalDesigner /></Protected>} />
-            <Route path="/design/banners" element={<Protected><BannerDesigner /></Protected>} />
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <SuperAdminProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/register" element={<Register />} />
+              <Route path="/directory" element={<Protected><DirectoryList /></Protected>} />
+              <Route path="/directory/:id" element={<Protected><DirectoryDetail /></Protected>} />
+              <Route path="/personal" element={<Protected><PersonalHub /></Protected>} />
+              <Route path="/business" element={<Protected><BusinessHub /></Protected>} />
+              <Route path="/business/advertise" element={<Protected><BusinessAdInput /></Protected>} />
+              <Route path="/classifieds" element={<Protected><ClassifiedsHub /></Protected>} />
+              <Route path="/events" element={<Protected><EventsHub /></Protected>} />
+              <Route path="/details/:id" element={<Protected><DetailsPage /></Protected>} />
+              <Route path="/profile" element={<Protected><UserProfile /></Protected>} />
+              <Route path="/admin/super" element={<Protected><SuperAdminDashboard /></Protected>} />
+              
+              {/* Design Routes */}
+              <Route path="/design/business" element={<Protected><BusinessDesigner /></Protected>} />
+              <Route path="/design/classifieds" element={<Protected><ClassifiedDesigner /></Protected>} />
+              <Route path="/design/events" element={<Protected><EventDesigner /></Protected>} />
+              <Route path="/design/personal" element={<Protected><PersonalDesigner /></Protected>} />
+              <Route path="/design/banners" element={<Protected><BannerDesigner /></Protected>} />
+              
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </SuperAdminProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
