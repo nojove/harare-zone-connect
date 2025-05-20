@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   appName: 'harare-zone-connect',
   webDir: 'dist',
   server: {
-    url: 'https://8bf41197-a8ef-49c5-ac84-3a4d49cdfdde.lovableproject.com?forceHideBadge=true',
+    url: 'https://www.renewableenergysolutions.co.zw',
     cleartext: true
   },
   plugins: {
