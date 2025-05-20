@@ -32,9 +32,22 @@ const buildAndSync = () => {
 const buildApk = () => {
   console.log('🤖 Building Android APK...');
   if (buildAndSync()) {
-    console.log('🚀 Opening Android Studio...');
-    if (runCommand('npx cap open android')) {
-      console.log('✅ Android Studio opened. Build APK using Build > Build Bundle(s) / APK(s) > Build APK(s)');
+    console.log('📦 Building debug APK...');
+    if (runCommand('cd android && ./gradlew assembleDebug')) {
+      console.log('✅ Debug APK built successfully at: android/app/build/outputs/apk/debug/app-debug.apk');
+      return true;
+    }
+  }
+  return false;
+};
+
+// Build release APK for Android
+const buildReleaseApk = () => {
+  console.log('🚀 Building Release APK...');
+  if (buildAndSync()) {
+    console.log('📦 Building release APK...');
+    if (runCommand('cd android && ./gradlew assembleRelease')) {
+      console.log('✅ Release APK built successfully at: android/app/build/outputs/apk/release/app-release.apk');
       return true;
     }
   }
@@ -44,5 +57,6 @@ const buildApk = () => {
 // Export functions
 module.exports = {
   buildAndSync,
-  buildApk
+  buildApk,
+  buildReleaseApk
 };
