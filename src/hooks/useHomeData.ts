@@ -14,12 +14,17 @@ export const useHomeData = () => {
     const fetchHomeData = async () => {
       setLoading(true);
       try {
-        // Fetch categories
+        // Fetch categories - ensuring no duplicates with distinct selection
         const { data: categoriesData, error: categoriesError } = await supabase
           .from('categories')
           .select('*');
           
         if (categoriesError) throw categoriesError;
+        
+        // Remove any potential duplicates by using Set with id
+        const uniqueCategories = Array.from(
+          new Map(categoriesData?.map(item => [item.id, item])).values()
+        );
         
         // Fetch featured banners (homepage placement)
         const { data: bannersData, error: bannersError } = await supabase
@@ -54,7 +59,7 @@ export const useHomeData = () => {
           
         if (classifiedsError) throw classifiedsError;
         
-        setCategories(categoriesData || []);
+        setCategories(uniqueCategories || []);
         setFeaturedBanners(bannersData || []);
         setUpcomingEvents(eventsData || []);
         setFeaturedClassifieds(classifiedsData || []);

@@ -45,16 +45,16 @@ const TopNavigation: FC = () => {
   
   return (
     <div className="bg-white shadow-sm overflow-x-auto">
-      <div className="flex space-x-1 px-2 py-2">
+      <div className="flex space-x-2 px-3 py-2">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`whitespace-nowrap px-3 py-1 rounded-md text-sm font-medium ${
+              className={`whitespace-nowrap px-3 py-1.5 rounded-md text-sm ${
                 isActive 
-                  ? item.activeColor + ' text-gray-900' 
+                  ? item.activeColor + ' font-bold text-gray-900' 
                   : 'text-gray-600 ' + item.hoverColor + ' hover:text-gray-900'
               }`}
             >

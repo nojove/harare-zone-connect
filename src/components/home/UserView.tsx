@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Classified, Event } from '@/types';
-import CreateNewSection from './CreateNewSection';
 import EventsList from './EventsList';
 import ClassifiedsList from './ClassifiedsList';
 
@@ -53,8 +52,7 @@ const UserView: FC<UserViewProps> = ({
         </div>
       </div>
       
-      {/* Create New Content Section */}
-      <CreateNewSection navigateToDesigner={navigateToDesigner} />
+      {/* "Create New" section has been removed */}
       
       {/* Upcoming Events */}
       {upcomingEvents.length > 0 && (
