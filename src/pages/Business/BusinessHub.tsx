@@ -1,10 +1,10 @@
-
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import BannerAd from '@/components/BannerAd';
 import BusinessCategories from '@/components/BusinessCategories';
+import { useAuth } from '@/context/AuthContext';
 
 interface BusinessListing {
   id: string;
@@ -18,6 +18,7 @@ interface BusinessListing {
 
 const BusinessHub: FC = () => {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('Services');
   
   // Dummy data for business listings
@@ -46,6 +47,14 @@ const BusinessHub: FC = () => {
   // Filter listings by selected category
   const filteredListings = dummyListings.filter(listing => listing.category === selectedCategory);
   
+  const handleBusinessClick = (id: string) => {
+    if (session) {
+      navigate(`/details/full/${id}`);
+    } else {
+      navigate(`/details/${id}`);
+    }
+  };
+
   return (
     <MainLayout category="business">
       <div className="flex flex-col p-4">
@@ -60,7 +69,7 @@ const BusinessHub: FC = () => {
           <h2 className="text-lg font-semibold">{selectedCategory}</h2>
           
           {filteredListings.slice(0, Math.ceil(filteredListings.length / 2)).map((listing) => (
-            <Card key={listing.id} className="cursor-pointer hover:shadow-md" onClick={() => navigate(`/business/${listing.id}`)}>
+            <Card key={listing.id} className="cursor-pointer hover:shadow-md" onClick={() => handleBusinessClick(listing.id)}>
               <CardContent className="p-4">
                 <h3 className="font-semibold">{listing.title}</h3>
                 <p className="text-sm text-gray-600 mt-1">{listing.description}</p>
@@ -81,7 +90,7 @@ const BusinessHub: FC = () => {
           />
           
           {filteredListings.slice(Math.ceil(filteredListings.length / 2)).map((listing) => (
-            <Card key={listing.id} className="cursor-pointer hover:shadow-md" onClick={() => navigate(`/business/${listing.id}`)}>
+            <Card key={listing.id} className="cursor-pointer hover:shadow-md" onClick={() => handleBusinessClick(listing.id)}>
               <CardContent className="p-4">
                 <h3 className="font-semibold">{listing.title}</h3>
                 <p className="text-sm text-gray-600 mt-1">{listing.description}</p>

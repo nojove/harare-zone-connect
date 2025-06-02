@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 import BannerAd from '@/components/BannerAd';
+import { useAuth } from '@/context/AuthContext';
 
 interface EventListing {
   id: string;
@@ -18,6 +19,7 @@ interface EventListing {
 
 const EventsHub: FC = () => {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [searchResults, setSearchResults] = useState<EventListing[]>([]);
   
   // Dummy data for events
@@ -45,6 +47,14 @@ const EventsHub: FC = () => {
     setSearchResults(filtered);
   };
   
+  const handleEventClick = (id: string) => {
+    if (session) {
+      navigate(`/details/full/${id}`);
+    } else {
+      navigate(`/details/${id}`);
+    }
+  };
+  
   return (
     <MainLayout category="events">
       <div className="flex flex-col p-4">
@@ -59,7 +69,7 @@ const EventsHub: FC = () => {
             <>
               <h2 className="text-lg font-semibold">Search Results</h2>
               {searchResults.map((event) => (
-                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => navigate(`/events/${event.id}`)}>
+                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => handleEventClick(event.id)}>
                   <CardContent className="p-4">
                     <h3 className="font-semibold">{event.title}</h3>
                     <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -80,7 +90,7 @@ const EventsHub: FC = () => {
               <h2 className="text-lg font-semibold">Upcoming Events</h2>
               
               {dummyEvents.slice(0, 2).map((event) => (
-                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => navigate(`/events/${event.id}`)}>
+                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => handleEventClick(event.id)}>
                   <CardContent className="p-4">
                     <h3 className="font-semibold">{event.title}</h3>
                     <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -104,7 +114,7 @@ const EventsHub: FC = () => {
               />
               
               {dummyEvents.slice(2).map((event) => (
-                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => navigate(`/events/${event.id}`)}>
+                <Card key={event.id} className="cursor-pointer hover:shadow-md" onClick={() => handleEventClick(event.id)}>
                   <CardContent className="p-4">
                     <h3 className="font-semibold">{event.title}</h3>
                     <div className="flex items-center text-xs text-gray-500 mt-1">

@@ -7,9 +7,11 @@ import MainLayout from '../../components/MainLayout';
 import { useCategories } from '../../hooks/useCategories';
 import CategoryTabs from '../../components/CategoryTabs';
 import SearchBar from '@/components/SearchBar';
+import { useAuth } from '@/hooks/useAuth';
 
 const DirectoryList: FC = () => {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const { categories, loading: loadingCategories } = useCategories();
   const [listings, setListings] = useState<DirectoryListing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,11 @@ const DirectoryList: FC = () => {
   });
 
   const handleListingClick = (id: string) => {
-    navigate(`/directory/${id}`);
+    if (session) {
+      navigate(`/directory/${id}`);
+    } else {
+      navigate(`/details/${id}`);
+    }
   };
 
   const handleSearch = (query: string) => {

@@ -1,4 +1,3 @@
-
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -18,6 +17,11 @@ const GuestView: FC<GuestViewProps> = ({ sampleClassifieds, sampleEvents }) => {
   const continueAsGuest = () => {
     navigate('/classifieds');
     toast("You're browsing as a guest. Some features will be limited.");
+  };
+
+  const handleItemClick = (id: string) => {
+    // Show signup prompt for detail access
+    navigate(`/details/${id}`);
   };
 
   return (
@@ -60,7 +64,7 @@ const GuestView: FC<GuestViewProps> = ({ sampleClassifieds, sampleEvents }) => {
             <Card 
               key={item.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => navigate(`/details/${item.id}`)}
+              onClick={() => handleItemClick(item.id)}
             >
               {item.images && item.images[0] && (
                 <div className="h-32 w-full overflow-hidden">
@@ -100,7 +104,7 @@ const GuestView: FC<GuestViewProps> = ({ sampleClassifieds, sampleEvents }) => {
             <Card 
               key={event.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => navigate(`/details/${event.id}`)}
+              onClick={() => handleItemClick(event.id)}
             >
               <div className="flex h-24">
                 <div className="w-24 overflow-hidden">
