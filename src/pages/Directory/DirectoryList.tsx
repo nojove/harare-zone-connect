@@ -7,7 +7,7 @@ import MainLayout from '../../components/MainLayout';
 import { useCategories } from '../../hooks/useCategories';
 import CategoryTabs from '../../components/CategoryTabs';
 import SearchBar from '@/components/SearchBar';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const DirectoryList: FC = () => {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 import BannerAd from '@/components/BannerAd';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface EventListing {
   id: string;

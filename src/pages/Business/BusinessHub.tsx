@@ -4,7 +4,7 @@ import MainLayout from '@/components/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import BannerAd from '@/components/BannerAd';
 import BusinessCategories from '@/components/BusinessCategories';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface BusinessListing {
   id: string;
