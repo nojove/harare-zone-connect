@@ -1,4 +1,3 @@
-
 import { FC, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import MainLayout from '@/components/MainLayout';
@@ -6,9 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { User, Image, Link, Settings, Edit, Plus } from 'lucide-react';
+import { User, Image, Link, Settings, Edit, Plus, Bot } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/sonner';
+import AIProfessor from '@/components/ai/AIProfessor';
 
 interface Photo {
   id: string;
@@ -320,9 +320,12 @@ const PersonalHub: FC = () => {
     <MainLayout category="personal">
       <div className="flex flex-col p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="profile" className="text-sm">
               <User className="h-4 w-4 mr-1" /> Profile
+            </TabsTrigger>
+            <TabsTrigger value="ai" className="text-sm">
+              <Bot className="h-4 w-4 mr-1" /> AI Professor
             </TabsTrigger>
             <TabsTrigger value="photos" className="text-sm">
               <Image className="h-4 w-4 mr-1" /> Photos
@@ -366,6 +369,10 @@ const PersonalHub: FC = () => {
                 {renderWidgets()}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="ai" className="mt-4">
+            <AIProfessor />
           </TabsContent>
           
           <TabsContent value="photos" className="mt-4">
