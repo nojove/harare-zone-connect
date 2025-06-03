@@ -10,12 +10,16 @@ import { Bot, Send, User, Settings } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/sonner';
+import { useOfflineStorage } from '@/hooks/useOfflineStorage';
+import ConnectionStatus from '@/components/ui/connection-status';
+import OfflineAIFallback from './OfflineAIFallback';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  isOffline?: boolean;
 }
 
 interface Conversation {
@@ -26,12 +30,22 @@ interface Conversation {
 
 const AIProfessor: FC = () => {
   const { session } = useAuth();
+  const {
+    isOnline,
+    saveMessageOffline,
+    saveConversationOffline,
+    getOfflineConversations,
+    syncPendingMessages,
+    saveAnalyticsOffline
+  } = useOfflineStorage();
+  
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingConversations, setLoadingConversations] = useState(true);
+  const [showOfflineFallback, setShowOfflineFallback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -48,24 +62,65 @@ const AIProfessor: FC = () => {
     }
   }, [session]);
 
+  // Sync when coming back online
+  useEffect(() => {
+    if (isOnline) {
+      syncPendingMessages();
+      fetchConversations(); // Refresh from server
+    }
+  }, [isOnline, syncPendingMessages]);
+
   const fetchConversations = async () => {
     try {
-      const { data, error } = await supabase
-        .from('ai_conversations')
-        .select('id, title, created_at')
-        .order('updated_at', { ascending: false })
-        .limit(10);
-
-      if (error) throw error;
+      let conversations: Conversation[] = [];
       
-      setConversations(data || []);
+      if (isOnline) {
+        // Fetch from server when online
+        const { data, error } = await supabase
+          .from('ai_conversations')
+          .select('id, title, created_at')
+          .order('updated_at', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+        conversations = data || [];
+        
+        // Cache conversations offline
+        for (const conv of conversations) {
+          await saveConversationOffline({
+            id: conv.id,
+            title: conv.title,
+            messages: [],
+            lastUpdated: new Date(conv.created_at)
+          });
+        }
+      } else {
+        // Load from offline storage
+        const offlineConversations = await getOfflineConversations();
+        conversations = offlineConversations.map(conv => ({
+          id: conv.id,
+          title: conv.title,
+          created_at: conv.lastUpdated.toISOString()
+        }));
+      }
+      
+      setConversations(conversations);
       
       // Auto-load the most recent conversation
-      if (data && data.length > 0 && !currentConversation) {
-        loadConversation(data[0].id);
+      if (conversations.length > 0 && !currentConversation) {
+        loadConversation(conversations[0].id);
       }
     } catch (error) {
       console.error('Error fetching conversations:', error);
+      
+      // Fallback to offline storage
+      const offlineConversations = await getOfflineConversations();
+      const conversations = offlineConversations.map(conv => ({
+        id: conv.id,
+        title: conv.title,
+        created_at: conv.lastUpdated.toISOString()
+      }));
+      setConversations(conversations);
     } finally {
       setLoadingConversations(false);
     }
@@ -73,22 +128,27 @@ const AIProfessor: FC = () => {
 
   const loadConversation = async (conversationId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('ai_messages')
-        .select('id, role, content, created_at')
-        .eq('conversation_id', conversationId)
-        .order('created_at', { ascending: true });
+      let messages: Message[] = [];
+      
+      if (isOnline) {
+        // Load from server when online
+        const { data, error } = await supabase
+          .from('ai_messages')
+          .select('id, role, content, created_at')
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      const formattedMessages = data?.map(msg => ({
-        id: msg.id,
-        role: msg.role as 'user' | 'assistant',
-        content: msg.content,
-        timestamp: new Date(msg.created_at)
-      })) || [];
-
-      setMessages(formattedMessages);
+        messages = data?.map(msg => ({
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.created_at)
+        })) || [];
+      }
+      
+      setMessages(messages);
       setCurrentConversation(conversationId);
     } catch (error) {
       console.error('Error loading conversation:', error);
@@ -98,18 +158,32 @@ const AIProfessor: FC = () => {
 
   const createNewConversation = async () => {
     try {
-      const { data, error } = await supabase
-        .from('ai_conversations')
-        .insert({
-          user_id: session?.user.id,
-          title: 'New Chat'
-        })
-        .select()
-        .single();
+      const conversationId = `offline-${Date.now()}`;
+      const title = 'New Chat';
+      
+      if (isOnline) {
+        const { data, error } = await supabase
+          .from('ai_conversations')
+          .insert({
+            user_id: session?.user.id,
+            title
+          })
+          .select()
+          .single();
 
-      if (error) throw error;
-
-      setCurrentConversation(data.id);
+        if (error) throw error;
+        setCurrentConversation(data.id);
+      } else {
+        // Create offline conversation
+        await saveConversationOffline({
+          id: conversationId,
+          title,
+          messages: [],
+          lastUpdated: new Date()
+        });
+        setCurrentConversation(conversationId);
+      }
+      
       setMessages([]);
       fetchConversations();
     } catch (error) {
@@ -126,76 +200,129 @@ const AIProfessor: FC = () => {
     
     // Add user message to UI immediately
     const tempUserMessage: Message = {
-      id: 'temp-user',
+      id: `temp-user-${Date.now()}`,
       role: 'user',
       content: userMessage,
-      timestamp: new Date()
+      timestamp: new Date(),
+      isOffline: !isOnline
     };
     setMessages(prev => [...prev, tempUserMessage]);
     setLoading(true);
 
+    // Save analytics
+    await saveAnalyticsOffline({
+      event_type: 'ai_chat_attempt',
+      event_data: {
+        message_length: userMessage.length,
+        is_online: isOnline
+      }
+    });
+
     try {
       let conversationId = currentConversation;
       
-      // Create new conversation if none exists
-      if (!conversationId) {
-        const { data, error } = await supabase
-          .from('ai_conversations')
-          .insert({
-            user_id: session?.user.id,
-            title: userMessage.slice(0, 50)
-          })
-          .select()
+      if (isOnline) {
+        // Online mode - full AI functionality
+        // Create new conversation if none exists
+        if (!conversationId) {
+          const { data, error } = await supabase
+            .from('ai_conversations')
+            .insert({
+              user_id: session?.user.id,
+              title: userMessage.slice(0, 50)
+            })
+            .select()
+            .single();
+
+          if (error) throw error;
+          conversationId = data.id;
+          setCurrentConversation(conversationId);
+        }
+
+        // Get user context from their profile and activity
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session?.user.id)
           .single();
 
+        const userContext = {
+          location: profile?.location,
+          interests: profile?.service_type ? [profile.service_type] : [],
+          businessOwner: !!profile?.business_name
+        };
+
+        // Call AI function
+        const { data, error } = await supabase.functions.invoke('ai-chat', {
+          body: {
+            message: userMessage,
+            conversationId,
+            userContext
+          }
+        });
+
         if (error) throw error;
-        conversationId = data.id;
-        setCurrentConversation(conversationId);
-      }
 
-      // Get user context from their profile and activity
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session?.user.id)
-        .single();
+        // Add AI response to UI
+        const aiMessage: Message = {
+          id: `ai-${Date.now()}`,
+          role: 'assistant',
+          content: data.response,
+          timestamp: new Date()
+        };
 
-      const userContext = {
-        location: profile?.location,
-        interests: profile?.service_type ? [profile.service_type] : [],
-        businessOwner: !!profile?.business_name
-      };
+        setMessages(prev => prev.slice(0, -1).concat([
+          { ...tempUserMessage, id: `user-${Date.now()}` },
+          aiMessage
+        ]));
 
-      // Call AI function
-      const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: {
-          message: userMessage,
-          conversationId,
-          userContext
+        // Refresh conversations to update the title/timestamp
+        fetchConversations();
+      } else {
+        // Offline mode - save message and show fallback
+        if (!conversationId) {
+          conversationId = `offline-${Date.now()}`;
+          setCurrentConversation(conversationId);
         }
-      });
 
-      if (error) throw error;
+        // Save user message offline
+        await saveMessageOffline({
+          id: tempUserMessage.id,
+          conversationId,
+          content: userMessage,
+          role: 'user',
+          timestamp: new Date(),
+          synced: false
+        });
 
-      // Add AI response to UI
-      const aiMessage: Message = {
-        id: 'temp-ai',
-        role: 'assistant',
-        content: data.response,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => prev.slice(0, -1).concat([
-        { ...tempUserMessage, id: Date.now().toString() },
-        aiMessage
-      ]));
-
-      // Refresh conversations to update the title/timestamp
-      fetchConversations();
+        // Show offline fallback instead of AI response
+        setShowOfflineFallback(true);
+        setMessages(prev => prev.slice(0, -1).concat([
+          { ...tempUserMessage, id: `user-${Date.now()}` }
+        ]));
+      }
 
     } catch (error) {
       console.error('Error sending message:', error);
-      toast('Failed to send message. Please check if OpenAI API key is configured.');
+      
+      if (isOnline) {
+        toast('Failed to send message. Please check if OpenAI API key is configured.');
+      } else {
+        toast('Message saved offline. Will send when reconnected.');
+      }
+      
+      // Save message offline as fallback
+      if (currentConversation) {
+        await saveMessageOffline({
+          id: tempUserMessage.id,
+          conversationId: currentConversation,
+          content: userMessage,
+          role: 'user',
+          timestamp: new Date(),
+          synced: false
+        });
+      }
+      
       setMessages(prev => prev.slice(0, -1)); // Remove the temp message
     } finally {
       setLoading(false);
@@ -205,6 +332,13 @@ const AIProfessor: FC = () => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const handleRetryOnline = () => {
+    setShowOfflineFallback(false);
+    if (isOnline) {
       sendMessage();
     }
   };
@@ -229,6 +363,11 @@ const AIProfessor: FC = () => {
           <div className="flex items-center gap-2">
             <Bot className="h-5 w-5 text-blue-600" />
             AI Professor
+            {!isOnline && (
+              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                Offline
+              </span>
+            )}
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={createNewConversation}>
@@ -239,6 +378,9 @@ const AIProfessor: FC = () => {
             </Button>
           </div>
         </CardTitle>
+        
+        <ConnectionStatus onRetry={handleRetryOnline} />
+        
         {conversations.length > 1 && (
           <div className="flex gap-2 overflow-x-auto">
             {conversations.slice(0, 3).map((conv) => (
@@ -262,7 +404,12 @@ const AIProfessor: FC = () => {
             <div className="text-center text-gray-500 mt-8">
               <Bot className="h-12 w-12 mx-auto mb-4 text-blue-600" />
               <h3 className="font-medium mb-2">Welcome to your AI Professor!</h3>
-              <p className="text-sm">Ask me anything about business, learning, or how to use Harare Zone Connect.</p>
+              <p className="text-sm">
+                {isOnline 
+                  ? "Ask me anything about business, learning, or how to use Harare Zone Connect."
+                  : "Currently offline - I can still help with basic questions and save your messages for when you reconnect."
+                }
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -282,13 +429,16 @@ const AIProfessor: FC = () => {
                   <div
                     className={`max-w-[80%] rounded-lg p-3 ${
                       message.role === 'user'
-                        ? 'bg-blue-600 text-white'
+                        ? `${message.isOffline ? 'bg-orange-600' : 'bg-blue-600'} text-white`
                         : 'bg-gray-100 text-gray-900'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <div className="text-xs opacity-70 mt-1">
+                    <div className="text-xs opacity-70 mt-1 flex items-center gap-1">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {message.isOffline && (
+                        <span className="text-xs">(offline)</span>
+                      )}
                     </div>
                   </div>
                   
@@ -301,6 +451,13 @@ const AIProfessor: FC = () => {
                   )}
                 </div>
               ))}
+              
+              {showOfflineFallback && (
+                <OfflineAIFallback 
+                  userMessage={input} 
+                  onRetry={handleRetryOnline}
+                />
+              )}
               
               {loading && (
                 <div className="flex gap-3 justify-start">
@@ -330,7 +487,7 @@ const AIProfessor: FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask your AI Professor anything..."
+              placeholder={isOnline ? "Ask your AI Professor anything..." : "Message will be sent when reconnected..."}
               disabled={loading}
               className="flex-1"
             />
@@ -342,6 +499,11 @@ const AIProfessor: FC = () => {
               <Send className="h-4 w-4" />
             </Button>
           </div>
+          {!isOnline && (
+            <div className="text-xs text-orange-600 mt-1">
+              Offline mode: Messages will sync when you reconnect
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
