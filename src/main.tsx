@@ -21,13 +21,15 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Add background sync registration
+// Add background sync registration with proper checks
 if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
   navigator.serviceWorker.ready.then((registration) => {
     // Register for background sync when offline messages need to be sent
     window.addEventListener('online', () => {
-      registration.sync.register('ai-messages-sync');
-      registration.sync.register('analytics-sync');
+      if ('sync' in registration) {
+        registration.sync.register('ai-messages-sync');
+        registration.sync.register('analytics-sync');
+      }
     });
   });
 }

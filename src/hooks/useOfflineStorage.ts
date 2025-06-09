@@ -160,7 +160,10 @@ export const useOfflineStorage = () => {
       const transaction = db.transaction(['offline_messages'], 'readwrite');
       const store = transaction.objectStore('offline_messages');
       const index = store.index('synced');
-      const request = index.getAll(false);
+      
+      // Use IDBKeyRange for proper IndexedDB querying
+      const keyRange = IDBKeyRange.only(false);
+      const request = index.getAll(keyRange);
       
       request.onsuccess = async () => {
         const unsyncedMessages = request.result;
@@ -219,7 +222,10 @@ export const useOfflineStorage = () => {
       const transaction = db.transaction(['offline_messages'], 'readwrite');
       const store = transaction.objectStore('offline_messages');
       const index = store.index('synced');
-      const request = index.openCursor(true);
+      
+      // Use IDBKeyRange for proper IndexedDB querying
+      const keyRange = IDBKeyRange.only(true);
+      const request = index.openCursor(keyRange);
       
       request.onsuccess = (event) => {
         const cursor = (event.target as IDBRequest).result;
