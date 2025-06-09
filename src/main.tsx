@@ -27,9 +27,10 @@ if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.p
     // Register for background sync when offline messages need to be sent
     window.addEventListener('online', () => {
       if ('sync' in registration) {
-        // Type assertion for the sync property
-        (registration as any).sync.register('ai-messages-sync');
-        (registration as any).sync.register('analytics-sync');
+        // Type assertion for the sync property with proper interface
+        const syncManager = (registration as any).sync;
+        syncManager.register('ai-messages-sync');
+        syncManager.register('analytics-sync');
       }
     });
   });
