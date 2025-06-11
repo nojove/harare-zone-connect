@@ -3,6 +3,13 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
+// Extended interface for ServiceWorkerRegistration with sync
+interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
+  sync?: {
+    register: (tag: string) => Promise<void>;
+  };
+}
+
 // Register service worker for offline functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -26,11 +33,10 @@ if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.p
   navigator.serviceWorker.ready.then((registration) => {
     // Register for background sync when offline messages need to be sent
     window.addEventListener('online', () => {
-      if ('sync' in registration) {
-        // Type assertion for the sync property with proper interface
-        const syncManager = (registration as any).sync;
-        syncManager.register('ai-messages-sync');
-        syncManager.register('analytics-sync');
+      const syncReg = registration as ServiceWorkerRegistrationWithSync;
+      if (syncReg.sync) {
+        syncReg.sync.register('ai-messages-sync');
+        syncReg.sync.register('analytics-sync');
       }
     });
   });
