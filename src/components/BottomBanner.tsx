@@ -7,7 +7,7 @@ interface BottomBannerProps {
 }
 
 const BottomBanner: FC<BottomBannerProps> = ({ banner }) => {
-  // Return null to remove the banner completely as per requirements
+  // Banner component completely removed - returns null to render nothing
   return null;
 };
 
