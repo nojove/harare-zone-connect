@@ -31,16 +31,18 @@ const MainLayout: FC<MainLayoutProps> = ({
   return (
     <CategoryThemeProvider category={category}>
       <div className="flex flex-col min-h-screen">
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+        {/* Fixed header container */}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
           <AppHeader />
-          
           {showTopNavigation && <TopNavigation />}
-        </div>
+        </header>
         
-        <div className="flex-grow pb-20 pt-32">
+        {/* Main content with proper top padding to account for fixed header */}
+        <main className="flex-grow pt-32 pb-20">
           {children}
-        </div>
+        </main>
         
+        {/* Fixed bottom navigation */}
         <NavigationTabs />
       </div>
     </CategoryThemeProvider>
